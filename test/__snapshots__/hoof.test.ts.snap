@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeveloperGroupStack 1`] = `
+Object {
+  "Parameters": Object {
+    "environmentName": Object {
+      "Type": "String",
+    },
+    "targetAccount": Object {
+      "Type": "String",
+    },
+    "users": Object {
+      "Type": "CommaDelimitedList",
+    },
+  },
+  "Resources": Object {
+    "DeveloperGroup54FA9D31": Object {
+      "Properties": Object {
+        "GroupName": "DeveloperGroup",
+        "ManagedPolicyArns": Array [
+          Object {
+            "Ref": "DeveloperManagedPolicy624C6F4D",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Group",
+    },
+    "DeveloperManagedPolicy624C6F4D": Object {
+      "Properties": Object {
+        "Description": "DeveloperGroup policy",
+        "ManagedPolicyName": "DeveloperManagedPolicy",
+        "Path": "/",
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Condition": Object {
+                "Bool": Object {
+                  "aws:MultiFactorAuthPresent": true,
+                  "aws:SecureTransport": true,
+                },
+                "NumericLessThan": Object {
+                  "aws:MultiFactorAuthAge": 43200,
+                },
+              },
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:aws:iam::",
+                      Object {
+                        "Ref": "targetAccount",
+                      },
+                      ":role/goat-",
+                      Object {
+                        "Ref": "environmentName",
+                      },
+                    ],
+                  ],
+                },
+                Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:aws:iam::",
+                      Object {
+                        "Ref": "targetAccount",
+                      },
+                      ":role/read-only",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "UserToGroupAddition": Object {
+      "Properties": Object {
+        "GroupName": Object {
+          "Ref": "DeveloperGroup54FA9D31",
+        },
+        "Users": Object {
+          "Ref": "users",
+        },
+      },
+      "Type": "AWS::IAM::UserToGroupAddition",
+    },
+  },
+}
+`;
+
+exports[`DeveloperRoleStack 1`] = `
+Object {
+  "Parameters": Object {
+    "environmentName": Object {
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "DeveloperRole58EC5A58": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Condition": Object {
+                "Bool": Object {
+                  "aws:MultiFactorAuthPresent": true,
+                  "aws:SecureTransport": true,
+                },
+                "NumericLessThan": Object {
+                  "aws:MultiFactorAuthAge": 43200,
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "AWS": Object {
+                  "Fn::Join": Array [
+                    "",
+                    Array [
+                      "arn:",
+                      Object {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::237829512642:root",
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          "arn:aws:iam::aws:policy/AdministratorAccess",
+        ],
+        "RoleName": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "goat-",
+              Object {
+                "Ref": "environmentName",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+}
+`;

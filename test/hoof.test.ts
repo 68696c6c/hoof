@@ -1,13 +1,17 @@
-import { expect as expectCDK, matchTemplate, MatchStyle } from '@aws-cdk/assert';
-import * as cdk from '@aws-cdk/core';
-import * as Hoof from '../lib/hoof-stack';
+import { SynthUtils } from '@aws-cdk/assert'
+import * as cdk from '@aws-cdk/core'
 
-test('Empty Stack', () => {
-    const app = new cdk.App();
-    // WHEN
-    const stack = new Hoof.HoofStack(app, 'MyTestStack');
-    // THEN
-    expectCDK(stack).to(matchTemplate({
-      "Resources": {}
-    }, MatchStyle.EXACT))
-});
+import { DeveloperRoleStack } from '../lib/developer-role'
+import { DeveloperGroupStack } from '../lib/developer-group'
+
+test('DeveloperRoleStack', () => {
+  const app = new cdk.App()
+  const stack = new DeveloperRoleStack(app, 'developer-role')
+  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot()
+})
+
+test('DeveloperGroupStack', () => {
+  const app = new cdk.App()
+  const stack = new DeveloperGroupStack(app, 'developer-group-prod')
+  expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot()
+})
